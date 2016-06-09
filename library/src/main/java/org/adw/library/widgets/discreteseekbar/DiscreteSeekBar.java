@@ -1006,9 +1006,23 @@ public class DiscreteSeekBar extends View {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+        hideAllFloater();
+    }
+
+    private void hideAllFloater() {
         removeCallbacks(mShowIndicatorRunnable);
         if (!isInEditMode()) {
             mIndicator.dismissComplete();
+        }
+    }
+
+    @Override
+    protected void onVisibilityChanged(View changedView, int visibility) {
+        super.onVisibilityChanged(changedView, visibility);
+        if (visibility != View.VISIBLE) {
+            hideAllFloater();
+        } else {
+            updateFromDrawableState();
         }
     }
 
