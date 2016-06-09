@@ -39,5 +39,6 @@
         <attr name="dsb_thumbSize" format="integer|dimension"/>
         <attr name="dsb_indicatorSeparation" format="integer|dimension"/>
         <attr name="dsb_indicatorAlwaysShow" format="boolean"/>
+        <attr name="dsb_hideThumbWhenPress" format="boolean"/>
     </declare-styleable>
 </resources>

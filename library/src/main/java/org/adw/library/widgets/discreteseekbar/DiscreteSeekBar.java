@@ -52,6 +52,7 @@ import java.util.Locale;
 public class DiscreteSeekBar extends View {
 
     private boolean mIndicatorAlwaysShow;
+    private boolean mHideThumbWhenPress;
 
     /**
      * Interface to propagate seekbar change event
@@ -73,9 +74,9 @@ public class DiscreteSeekBar extends View {
 
     /**
      * Interface to transform the current internal value of this DiscreteSeekBar to anther one for the visualization.
-     * <p/>
+     * <p>
      * This will be used on the floating bubble to display a different value if needed.
-     * <p/>
+     * <p>
      * Using this in conjunction with {@link #setIndicatorFormatter(String)} you will be able to manipulate the
      * value seen by the user
      *
@@ -189,6 +190,7 @@ public class DiscreteSeekBar extends View {
         int max = 100;
         int min = 0;
         int value = 0;
+        mHideThumbWhenPress = a.getBoolean(R.styleable.DiscreteSeekBar_dsb_hideThumbWhenPress, true);
         mIndicatorAlwaysShow = a.getBoolean(R.styleable.DiscreteSeekBar_dsb_indicatorAlwaysShow, false);
         mMirrorForRtl = a.getBoolean(R.styleable.DiscreteSeekBar_dsb_mirrorForRtl, mMirrorForRtl);
         mAllowTrackClick = a.getBoolean(R.styleable.DiscreteSeekBar_dsb_allowTrackClickToDrag, mAllowTrackClick);
@@ -653,7 +655,7 @@ public class DiscreteSeekBar extends View {
                 pressed = true;
             }
         }
-        if (isEnabled() && (mIndicatorAlwaysShow ||(focused || pressed) && mIndicatorPopupEnabled)) {
+        if (isEnabled() && (mIndicatorAlwaysShow || (focused || pressed) && mIndicatorPopupEnabled)) {
             //We want to add a small delay here to avoid
             //poping in/out on simple taps
             removeCallbacks(mShowIndicatorRunnable);
@@ -970,7 +972,9 @@ public class DiscreteSeekBar extends View {
 
     private void showFloater() {
         if (!isInEditMode()) {
-            mThumb.animateToPressed();
+            if (mHideThumbWhenPress) {
+                mThumb.animateToPressed();
+            }
             mIndicator.showIndicator(this, mThumb.getBounds());
             notifyBubble(true);
         }
