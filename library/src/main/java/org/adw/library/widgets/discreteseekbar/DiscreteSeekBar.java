@@ -51,6 +51,8 @@ import java.util.Locale;
 
 public class DiscreteSeekBar extends View {
 
+    private boolean mIndicatorAlwaysShow;
+
     /**
      * Interface to propagate seekbar change event
      */
@@ -187,6 +189,7 @@ public class DiscreteSeekBar extends View {
         int max = 100;
         int min = 0;
         int value = 0;
+        mIndicatorAlwaysShow = a.getBoolean(R.styleable.DiscreteSeekBar_dsb_indicatorAlwaysShow, false);
         mMirrorForRtl = a.getBoolean(R.styleable.DiscreteSeekBar_dsb_mirrorForRtl, mMirrorForRtl);
         mAllowTrackClick = a.getBoolean(R.styleable.DiscreteSeekBar_dsb_allowTrackClickToDrag, mAllowTrackClick);
         mIndicatorPopupEnabled = a.getBoolean(R.styleable.DiscreteSeekBar_dsb_indicatorPopupEnabled, mIndicatorPopupEnabled);
@@ -650,7 +653,7 @@ public class DiscreteSeekBar extends View {
                 pressed = true;
             }
         }
-        if (isEnabled() && (focused || pressed) && mIndicatorPopupEnabled) {
+        if (isEnabled() && (mIndicatorAlwaysShow ||(focused || pressed) && mIndicatorPopupEnabled)) {
             //We want to add a small delay here to avoid
             //poping in/out on simple taps
             removeCallbacks(mShowIndicatorRunnable);
@@ -974,10 +977,12 @@ public class DiscreteSeekBar extends View {
     }
 
     private void hideFloater() {
-        removeCallbacks(mShowIndicatorRunnable);
-        if (!isInEditMode()) {
-            mIndicator.dismiss();
-            notifyBubble(false);
+        if (!mIndicatorAlwaysShow) {
+            removeCallbacks(mShowIndicatorRunnable);
+            if (!isInEditMode()) {
+                mIndicator.dismiss();
+                notifyBubble(false);
+            }
         }
     }
 
